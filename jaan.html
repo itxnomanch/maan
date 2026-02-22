@@ -1,55 +1,1212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Maan Ki Jaan! 🎉</title>
-    <!-- rest of the code remains the same, with changes in names and messages -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Maan Ki Jaan 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Nunito:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink: #ff6b9d;
+  --pink-light: #ffb3ce;
+  --pink-pale: #fff0f5;
+  --rose: #e8597a;
+  --gold: #f5c842;
+  --cream: #fff8f9;
+  --soft: #ffe4ee;
+  --text: #5a2d45;
+  --white: #ffffff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--cream);
+  overflow-x: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='28' font-size='28'%3E💕%3C/text%3E%3C/svg%3E"), auto;
+}
+
+/* ─── CONFETTI ─── */
+.confetti-wrap { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.confetti-piece {
+  position:absolute;
+  width:10px; height:10px;
+  border-radius:2px;
+  opacity:0;
+  animation: confettiFall linear infinite;
+}
+@keyframes confettiFall {
+  0%   { transform: translateY(-20px) rotate(0deg); opacity:1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity:0; }
+}
+
+/* ─── PIN SCREEN ─── */
+#pin-screen {
+  position:fixed; inset:0; z-index:9999;
+  background: linear-gradient(135deg, #ffcde3 0%, #ffd6e8 40%, #ffe8f0 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+
+/* Bubu Dudu SVG characters on pin screen */
+.pin-characters {
+  display:flex; align-items:flex-end; gap:10px; margin-bottom:1.5rem;
+}
+.char-bubu, .char-dudu {
+  animation: charBounce 2s ease-in-out infinite;
+}
+.char-dudu { animation-delay: 0.3s; }
+@keyframes charBounce {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+.pin-lock-icon { font-size:3rem; margin-bottom:0.5rem; animation: spin-heart 3s linear infinite; }
+@keyframes spin-heart {
+  0%,100% { transform: scale(1) rotate(-5deg); }
+  50%     { transform: scale(1.15) rotate(5deg); }
+}
+.pin-title {
+  font-family:'Pacifico', cursive;
+  font-size:clamp(1.6rem,5vw,2.5rem);
+  color: var(--rose);
+  margin-bottom:0.4rem;
+  text-shadow: 2px 2px 0 rgba(255,107,157,0.2);
+}
+.pin-sub {
+  font-family:'Nunito', sans-serif;
+  color: #b06080;
+  font-size:0.9rem;
+  letter-spacing:0.15em;
+  margin-bottom:2rem;
+  text-transform:uppercase;
+}
+.pin-dots { display:flex; gap:1rem; margin-bottom:1.8rem; }
+.pin-dot {
+  width:20px; height:20px;
+  border-radius:50%;
+  border:2.5px solid var(--pink);
+  background:transparent;
+  transition:all 0.25s;
+}
+.pin-dot.filled {
+  background: var(--pink);
+  box-shadow:0 0 14px rgba(255,107,157,0.6);
+  transform:scale(1.1);
+}
+.pin-pad {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0.75rem;
+  margin-bottom:1.2rem;
+}
+.pin-btn {
+  width:72px; height:72px;
+  border-radius:50%;
+  border:2px solid rgba(255,107,157,0.3);
+  background: rgba(255,255,255,0.7);
+  color: var(--rose);
+  font-family:'Nunito',sans-serif;
+  font-size:1.5rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:all 0.2s;
+  box-shadow:0 4px 15px rgba(255,107,157,0.15);
+  backdrop-filter:blur(4px);
+}
+.pin-btn:hover { background:var(--pink); color:#fff; transform:scale(1.08); box-shadow:0 6px 20px rgba(255,107,157,0.4); }
+.pin-btn:active { transform:scale(0.94); }
+.pin-btn.empty { border:none; background:transparent; box-shadow:none; pointer-events:none; }
+.pin-error {
+  color: #d94f6e;
+  font-size:0.88rem;
+  height:1.2em;
+  opacity:0;
+  transition:opacity 0.3s;
+  font-weight:600;
+}
+.pin-error.show { opacity:1; }
+
+/* Bubbles on pin bg */
+.pin-bubble {
+  position:absolute;
+  border-radius:50%;
+  background:rgba(255,107,157,0.12);
+  animation:floatBubble ease-in-out infinite;
+}
+@keyframes floatBubble {
+  0%,100% { transform:translateY(0) scale(1); }
+  50%     { transform:translateY(-30px) scale(1.05); }
+}
+
+/* ─── MAIN SITE ─── */
+#main-site { display:none; }
+
+/* ─── HERO ─── */
+.hero {
+  min-height:100vh;
+  background: linear-gradient(160deg, #ffcde3 0%, #ffd9e8 30%, #ffe8f4 70%, #fff0f8 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center;
+  padding:2rem 1.5rem 4rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero-balloons {
+  position:absolute; top:0; left:0; right:0;
+  display:flex; justify-content:space-around;
+  padding:0 2rem;
+  pointer-events:none;
+}
+.balloon {
+  font-size:clamp(2rem,5vw,4rem);
+  animation: balloonFloat 3s ease-in-out infinite;
+  transform-origin:bottom center;
+}
+.balloon:nth-child(2) { animation-delay:0.5s; }
+.balloon:nth-child(3) { animation-delay:1s; }
+.balloon:nth-child(4) { animation-delay:1.5s; }
+.balloon:nth-child(5) { animation-delay:0.8s; }
+@keyframes balloonFloat {
+  0%,100% { transform:translateY(0) rotate(-3deg); }
+  50%     { transform:translateY(-15px) rotate(3deg); }
+}
+
+.hero-bubu-dudu {
+  display:flex; align-items:center; justify-content:center;
+  gap:1.5rem; margin-bottom:1.5rem;
+  opacity:0; animation:popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) forwards 0.5s;
+}
+.hero-bubu-dudu svg { width:clamp(80px,18vw,140px); height:auto; }
+
+@keyframes popIn {
+  from { opacity:0; transform:scale(0.5) translateY(30px); }
+  to   { opacity:1; transform:scale(1) translateY(0); }
+}
+
+.hero-eyebrow {
+  font-family:'Nunito', sans-serif;
+  color: #b06080;
+  font-size:0.85rem;
+  letter-spacing:0.4em;
+  text-transform:uppercase;
+  margin-bottom:0.75rem;
+  opacity:0; animation:fadeUp 0.8s forwards 1s;
+}
+.hero-title {
+  font-family:'Pinyon Script', cursive;
+  font-size:clamp(4rem,16vw,10rem);
+  color: var(--rose);
+  line-height:0.85;
+  text-shadow:3px 3px 0 rgba(255,107,157,0.25), 0 0 40px rgba(232,89,122,0.3);
+  opacity:0; animation:fadeUp 0.8s forwards 1.2s;
+}
+.hero-name {
+  font-family:'Pacifico', cursive;
+  font-size:clamp(1.5rem,6vw,3.5rem);
+  color: var(--pink);
+  margin-top:0.3rem;
+  opacity:0; animation:fadeUp 0.8s forwards 1.4s;
+}
+.hero-date-badge {
+  display:inline-flex; align-items:center; gap:0.5rem;
+  background:rgba(255,255,255,0.8);
+  border:2px solid var(--pink-light);
+  border-radius:50px;
+  padding:0.5rem 1.5rem;
+  margin-top:1.5rem;
+  font-family:'Nunito', sans-serif;
+  color: var(--rose);
+  font-weight:700;
+  font-size:1rem;
+  letter-spacing:0.05em;
+  box-shadow:0 4px 20px rgba(255,107,157,0.2);
+  opacity:0; animation:fadeUp 0.8s forwards 1.6s;
+}
+.hero-from {
+  font-family:'Nunito',sans-serif;
+  color:#c08098;
+  font-size:0.9rem;
+  margin-top:0.6rem;
+  letter-spacing:0.2em;
+  opacity:0; animation:fadeUp 0.8s forwards 1.8s;
+}
+.scroll-indicator {
+  position:absolute; bottom:2rem;
+  color: rgba(176,96,128,0.5);
+  font-size:0.75rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  opacity:0; animation:fadeUp 0.8s forwards 2.2s;
+  display:flex; flex-direction:column; align-items:center; gap:0.3rem;
+}
+.scroll-arrow { font-size:1.4rem; animation:bounceArrow 1.5s ease-in-out infinite; }
+@keyframes bounceArrow { 0%,100% { transform:translateY(0); } 50% { transform:translateY(8px); } }
+
+/* ─── SECTIONS ─── */
+.section-wrap {
+  max-width:920px; margin:0 auto; padding:5rem 1.5rem;
+}
+.section-tag {
+  display:inline-block;
+  background: linear-gradient(90deg, var(--pink), var(--rose));
+  color:#fff;
+  font-size:0.72rem;
+  font-weight:700;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  padding:0.3rem 1.2rem;
+  border-radius:50px;
+  margin-bottom:1rem;
+}
+.section-title {
+  font-family:'Pinyon Script', cursive;
+  font-size:clamp(2.5rem,8vw,5rem);
+  color: var(--rose);
+  line-height:1;
+  margin-bottom:2.5rem;
+}
+
+/* ─── MEMORY CARD ─── */
+.memory-section {
+  background: linear-gradient(135deg, #ffe8f3, #fff5f8);
+  padding:5rem 1.5rem;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.memory-section::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(circle at 20% 50%, rgba(255,107,157,0.1) 0%, transparent 60%),
+              radial-gradient(circle at 80% 30%, rgba(245,200,66,0.08) 0%, transparent 50%);
+}
+.memory-characters-row {
+  display:flex; justify-content:center; align-items:center; gap:1rem;
+  margin-bottom:2rem;
+}
+.memory-card {
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(10px);
+  border:2px solid rgba(255,107,157,0.2);
+  border-radius:28px;
+  padding:3rem 2.5rem;
+  box-shadow:0 10px 50px rgba(255,107,157,0.12);
+  position:relative;
+  max-width:700px;
+  margin:0 auto;
+}
+.memory-card::before {
+  content:'"';
+  position:absolute; top:-1.5rem; left:2rem;
+  font-size:8rem; color:rgba(255,107,157,0.15);
+  font-family:Georgia,serif; line-height:1;
+}
+.memory-text {
+  font-family:'Nunito',sans-serif;
+  color: var(--text);
+  font-size:clamp(1rem,2.5vw,1.2rem);
+  line-height:1.95;
+  font-style:italic;
+}
+.memory-text .highlight { color:var(--pink); font-style:normal; font-weight:700; }
+.memory-signature {
+  font-family:'Pinyon Script', cursive;
+  font-size:2.5rem;
+  color: var(--rose);
+  margin-top:1.5rem;
+  display:block;
+}
+
+/* ─── COUNTDOWN ─── */
+.countdown-section {
+  background:var(--cream);
+  padding:5rem 1.5rem;
+  text-align:center;
+}
+.countdown-inner { max-width:700px; margin:0 auto; }
+.countdown-row {
+  display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;
+  margin-top:1.5rem;
+}
+.cd-box {
+  background:#fff;
+  border:2px solid rgba(255,107,157,0.25);
+  border-radius:20px;
+  padding:1.5rem 1.8rem;
+  box-shadow:0 4px 20px rgba(255,107,157,0.1);
+  min-width:110px;
+  position:relative;
+  overflow:hidden;
+}
+.cd-box::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:4px;
+  background:linear-gradient(90deg, var(--pink), var(--rose));
+}
+.cd-num {
+  font-family:'Pacifico', cursive;
+  font-size:2.8rem;
+  color: var(--rose);
+  display:block; line-height:1;
+}
+.cd-label {
+  font-size:0.7rem;
+  letter-spacing:0.2em;
+  color:#c08098;
+  text-transform:uppercase;
+  margin-top:0.25rem;
+  font-weight:600;
+}
+
+/* ─── GIFTS ─── */
+.gifts-section {
+  background: linear-gradient(135deg, #ffd6e8 0%, #fff0f5 100%);
+  padding:5rem 1.5rem;
+  text-align:center;
+  position:relative;
+}
+.gifts-section::after {
+  content:'';
+  position:absolute; inset:0;
+  background: radial-gradient(circle at 90% 80%, rgba(245,200,66,0.1) 0%, transparent 50%);
+}
+.gifts-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:1.5rem;
+  max-width:860px;
+  margin:0 auto;
+  position:relative; z-index:1;
+}
+.gift-card {
+  background:rgba(255,255,255,0.9);
+  border:2px solid rgba(255,107,157,0.2);
+  border-radius:24px;
+  padding:2.5rem 1.8rem 2rem;
+  cursor:pointer;
+  transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  box-shadow:0 6px 30px rgba(255,107,157,0.1);
+  position:relative;
+  overflow:hidden;
+  text-align:center;
+}
+.gift-card::after {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(255,107,157,0.08) 0%, transparent 100%);
+  opacity:0;
+  transition:opacity 0.3s;
+}
+.gift-card:hover {
+  transform:translateY(-10px) scale(1.02);
+  border-color:var(--pink);
+  box-shadow:0 20px 60px rgba(255,107,157,0.25);
+}
+.gift-card:hover::after { opacity:1; }
+.gift-ribbon {
+  position:absolute; top:0; right:0;
+  background:linear-gradient(135deg, var(--pink), var(--rose));
+  color:#fff;
+  font-size:0.65rem;
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  padding:0.3rem 0.8rem;
+  border-bottom-left-radius:12px;
+}
+.gift-svg-wrap { margin-bottom:1rem; display:flex; justify-content:center; }
+.gift-svg-wrap svg { width:80px; height:80px; }
+.gift-title {
+  font-family:'Pacifico', cursive;
+  color: var(--rose);
+  font-size:1.4rem;
+  margin-bottom:0.5rem;
+}
+.gift-desc {
+  font-family:'Nunito',sans-serif;
+  color:#9a6070;
+  font-size:0.9rem;
+  line-height:1.65;
+  font-style:italic;
+}
+.gift-open-btn {
+  display:inline-block;
+  margin-top:1.3rem;
+  padding:0.55rem 1.8rem;
+  border:2px solid var(--pink);
+  border-radius:50px;
+  color:var(--pink);
+  font-family:'Nunito',sans-serif;
+  font-size:0.85rem;
+  font-weight:700;
+  letter-spacing:0.05em;
+  cursor:pointer;
+  transition:all 0.3s;
+  background:transparent;
+}
+.gift-open-btn:hover { background:var(--pink); color:#fff; }
+
+/* ─── LOVE LETTER ─── */
+.letter-section {
+  background:var(--cream);
+  padding:5rem 1.5rem;
+  text-align:center;
+}
+.letter-card {
+  background:#fff;
+  border:2px solid rgba(255,107,157,0.18);
+  border-radius:28px;
+  padding:4rem 3rem;
+  max-width:720px;
+  margin:0 auto;
+  box-shadow:0 10px 50px rgba(255,107,157,0.1);
+  position:relative;
+}
+.letter-card::before, .letter-card::after {
+  font-size:3rem; position:absolute;
+  opacity:0.15; color:var(--pink);
+}
+.letter-card::before { content:'❤'; top:1.5rem; left:2rem; }
+.letter-card::after  { content:'❤'; bottom:1.5rem; right:2rem; }
+.letter-text {
+  font-family:'Nunito',sans-serif;
+  color: var(--text);
+  font-size:clamp(0.95rem,2.5vw,1.15rem);
+  line-height:2;
+  font-style:italic;
+  position:relative; z-index:1;
+}
+.letter-sign {
+  font-family:'Pinyon Script', cursive;
+  font-size:3rem;
+  color:var(--rose);
+  margin-top:2rem;
+  display:block;
+}
+
+/* ─── DIVIDER ─── */
+.divider {
+  text-align:center;
+  padding:1rem 0;
+  font-size:1.8rem;
+  letter-spacing:0.8rem;
+  opacity:0.35;
+  color:var(--pink);
+}
+
+/* ─── FOOTER ─── */
+footer {
+  background: linear-gradient(90deg, #ffcde3, #ffd9e8, #ffcde3);
+  text-align:center;
+  padding:2.5rem 1rem;
+  font-family:'Nunito',sans-serif;
+  color:#b06080;
+  font-size:0.9rem;
+  font-weight:600;
+}
+
+/* ─── MODAL ─── */
+.modal-overlay {
+  position:fixed; inset:0;
+  background:rgba(80,10,40,0.55);
+  backdrop-filter:blur(10px);
+  display:flex; align-items:center; justify-content:center;
+  z-index:5000;
+  opacity:0; pointer-events:none;
+  transition:opacity 0.35s;
+}
+.modal-overlay.open { opacity:1; pointer-events:all; }
+.modal-box {
+  background:#fff;
+  border:3px solid var(--pink-light);
+  border-radius:28px;
+  padding:3rem 2.5rem;
+  max-width:480px; width:90%;
+  text-align:center;
+  transform:scale(0.8);
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:0 20px 80px rgba(255,107,157,0.3);
+}
+.modal-overlay.open .modal-box { transform:scale(1); }
+.modal-chars { display:flex; justify-content:center; gap:0.5rem; margin-bottom:1rem; }
+.modal-chars svg { width:60px; height:60px; }
+.modal-title {
+  font-family:'Pacifico', cursive;
+  color:var(--rose);
+  font-size:2rem;
+  margin-bottom:1rem;
+}
+.modal-text {
+  font-family:'Nunito',sans-serif;
+  color:var(--text);
+  font-style:italic;
+  line-height:1.85;
+  font-size:1rem;
+  margin-bottom:1.5rem;
+}
+.modal-close {
+  padding:0.65rem 2rem;
+  border:2px solid var(--pink);
+  border-radius:50px;
+  background:transparent;
+  color:var(--pink);
+  font-family:'Nunito',sans-serif;
+  font-weight:700;
+  font-size:0.9rem;
+  cursor:pointer;
+  transition:all 0.3s;
+}
+.modal-close:hover { background:var(--pink); color:#fff; }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(30px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.reveal {
+  opacity:0; transform:translateY(40px);
+  transition:opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ── Sprinkle Hearts ── */
+.sparkle {
+  position:absolute;
+  font-size:1.2rem;
+  pointer-events:none;
+  animation:sparkleFloat 4s ease-in-out infinite;
+  opacity:0.5;
+}
+@keyframes sparkleFloat {
+  0%,100% { transform:translateY(0) rotate(0deg); opacity:0.3; }
+  50%      { transform:translateY(-20px) rotate(15deg); opacity:0.7; }
+}
+</style>
 </head>
 <body>
-    <!-- Screen 1: Mystery Door -->
-    <div class="screen active" id="screen1">
-        <div class="mystery-door">
-            <div class="door-icon">🚪</div>
-            <h1>A Special Surprise Awaits!</h1>
-            <p>Someone very special has a birthday today...</p>
-            <p>Are you ready to discover who? 🎈</p>
-            <button class="mystery-btn" onclick="revealBirthday()">Open the Door! 🎉</button>
-        </div>
+
+<!-- CONFETTI BACKGROUND -->
+<div class="confetti-wrap" id="confetti-wrap"></div>
+
+<!-- ───────────── PIN SCREEN ───────────── -->
+<div id="pin-screen">
+  <!-- Decorative bubbles -->
+  <div class="pin-bubble" style="width:200px;height:200px;top:-50px;left:-60px;animation-duration:6s;"></div>
+  <div class="pin-bubble" style="width:120px;height:120px;bottom:40px;right:-30px;animation-duration:4.5s;animation-delay:1s;"></div>
+  <div class="pin-bubble" style="width:80px;height:80px;top:30%;right:10%;animation-duration:5s;animation-delay:0.5s;"></div>
+
+  <!-- Bubu & Dudu on pin screen -->
+  <div class="pin-characters">
+    <!-- Bubu (pink bear) -->
+    <svg class="char-bubu" width="80" height="90" viewBox="0 0 80 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="18" r="12" fill="#ff9dc8"/>
+      <circle cx="60" cy="18" r="12" fill="#ff9dc8"/>
+      <ellipse cx="40" cy="52" rx="30" ry="32" fill="#ff9dc8"/>
+      <circle cx="40" cy="40" r="22" fill="#ffbcd9"/>
+      <ellipse cx="40" cy="46" rx="13" ry="10" fill="#ffcce6"/>
+      <circle cx="33" cy="36" r="3.5" fill="#5a2d45"/>
+      <circle cx="47" cy="36" r="3.5" fill="#5a2d45"/>
+      <circle cx="34.5" cy="34.5" r="1.2" fill="#fff"/>
+      <circle cx="48.5" cy="34.5" r="1.2" fill="#fff"/>
+      <ellipse cx="33" cy="42" rx="4" ry="2.5" fill="#ff7aac"/>
+      <ellipse cx="47" cy="42" rx="4" ry="2.5" fill="#ff7aac"/>
+      <ellipse cx="40" cy="44" rx="3.5" ry="2" fill="#5a2d45"/>
+      <path d="M36 47 Q40 50 44 47" stroke="#5a2d45" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="12" cy="72" rx="10" ry="14" fill="#ff9dc8"/>
+      <ellipse cx="68" cy="72" rx="10" ry="14" fill="#ff9dc8"/>
+      <ellipse cx="40" cy="75" rx="22" ry="16" fill="#ffbcd9"/>
+      <text x="27" y="79" font-size="14" fill="#ff7aac">♡</text>
+    </svg>
+    <!-- Heart in middle -->
+    <div style="font-size:2rem; animation:charBounce 1.5s ease-in-out infinite;">💕</div>
+    <!-- Dudu (white rabbit) -->
+    <svg class="char-dudu" width="80" height="100" viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="22" cy="18" rx="8" ry="20" fill="#ffe0f0"/>
+      <ellipse cx="58" cy="18" rx="8" ry="20" fill="#ffe0f0"/>
+      <ellipse cx="22" cy="14" rx="5" ry="16" fill="#ffb3ce"/>
+      <ellipse cx="58" cy="14" rx="5" ry="16" fill="#ffb3ce"/>
+      <circle cx="40" cy="46" r="26" fill="#fff0f8"/>
+      <ellipse cx="40" cy="50" rx="15" ry="12" fill="#ffe8f4"/>
+      <circle cx="33" cy="42" r="3.5" fill="#5a2d45"/>
+      <circle cx="47" cy="42" r="3.5" fill="#5a2d45"/>
+      <circle cx="34.5" cy="40.5" r="1.2" fill="#fff"/>
+      <circle cx="48.5" cy="40.5" r="1.2" fill="#fff"/>
+      <ellipse cx="33" cy="48" rx="4" ry="2.5" fill="#ff9dc8"/>
+      <ellipse cx="47" cy="48" rx="4" ry="2.5" fill="#ff9dc8"/>
+      <circle cx="40" cy="50" r="2.5" fill="#ff9dc8"/>
+      <path d="M36 53 Q40 57 44 53" stroke="#5a2d45" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="13" cy="80" rx="10" ry="14" fill="#fff0f8"/>
+      <ellipse cx="67" cy="80" rx="10" ry="14" fill="#fff0f8"/>
+      <ellipse cx="40" cy="82" rx="22" ry="16" fill="#fff0f8"/>
+      <ellipse cx="40" cy="88" rx="8" ry="5" fill="#ffe0f0"/>
+    </svg>
+  </div>
+
+  <div class="pin-lock-icon">🔐</div>
+  <div class="pin-title">Secret Love Portal</div>
+  <div class="pin-sub">Enter PIN to unlock 💕</div>
+
+  <div class="pin-dots" id="pin-dots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+  </div>
+
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="digit('1')">1</button>
+    <button class="pin-btn" onclick="digit('2')">2</button>
+    <button class="pin-btn" onclick="digit('3')">3</button>
+    <button class="pin-btn" onclick="digit('4')">4</button>
+    <button class="pin-btn" onclick="digit('5')">5</button>
+    <button class="pin-btn" onclick="digit('6')">6</button>
+    <button class="pin-btn" onclick="digit('7')">7</button>
+    <button class="pin-btn" onclick="digit('8')">8</button>
+    <button class="pin-btn" onclick="digit('9')">9</button>
+    <button class="pin-btn empty"></button>
+    <button class="pin-btn" onclick="digit('0')">0</button>
+    <button class="pin-btn" onclick="delDigit()" style="font-size:1.1rem;">⌫</button>
+  </div>
+  <div class="pin-error" id="pin-error">❌ Wrong PIN — try again sweetheart!</div>
+</div>
+
+<!-- ───────────── MAIN SITE ───────────── -->
+<div id="main-site">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-balloons">
+      <div class="balloon">🎈</div>
+      <div class="balloon">🎀</div>
+      <div class="balloon">🎈</div>
+      <div class="balloon">🎀</div>
+      <div class="balloon">🎈</div>
     </div>
-    <!-- Screen 2: Cake Cutting -->
-    <div class="screen" id="screen2">
-        <div class="cake-screen">
-            <h2>🎂 Happy Birthday Maan Ki Jaan! 🎂</h2>
-            <p style="color: white; font-size: 1.5em; margin-bottom: 20px;">📅 February 18 - Your Special Day! 📅</p>
-            <!-- rest of the code remains the same -->
-        </div>
+
+    <!-- Bubu & Dudu Hero -->
+    <div class="hero-bubu-dudu">
+      <!-- Bubu big -->
+      <svg width="130" height="150" viewBox="0 0 80 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="18" r="12" fill="#ff9dc8"/>
+        <circle cx="60" cy="18" r="12" fill="#ff9dc8"/>
+        <ellipse cx="40" cy="52" rx="30" ry="32" fill="#ff9dc8"/>
+        <circle cx="40" cy="40" r="22" fill="#ffbcd9"/>
+        <ellipse cx="40" cy="46" rx="13" ry="10" fill="#ffcce6"/>
+        <circle cx="33" cy="36" r="3.5" fill="#5a2d45"/>
+        <circle cx="47" cy="36" r="3.5" fill="#5a2d45"/>
+        <circle cx="34.5" cy="34.5" r="1.2" fill="#fff"/>
+        <circle cx="48.5" cy="34.5" r="1.2" fill="#fff"/>
+        <ellipse cx="33" cy="42" rx="4" ry="2.5" fill="#ff7aac"/>
+        <ellipse cx="47" cy="42" rx="4" ry="2.5" fill="#ff7aac"/>
+        <ellipse cx="40" cy="44" rx="3.5" ry="2" fill="#5a2d45"/>
+        <path d="M36 47 Q40 51 44 47" stroke="#5a2d45" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="12" cy="72" rx="10" ry="14" fill="#ff9dc8"/>
+        <ellipse cx="68" cy="72" rx="10" ry="14" fill="#ff9dc8"/>
+        <ellipse cx="40" cy="75" rx="22" ry="16" fill="#ffbcd9"/>
+        <!-- hat -->
+        <ellipse cx="40" cy="18" rx="18" ry="5" fill="#ff6b9d"/>
+        <rect x="30" y="4" width="20" height="14" rx="4" fill="#ff6b9d"/>
+        <rect x="28" y="11" width="24" height="4" rx="2" fill="#fff"/>
+        <text x="36" y="10" font-size="8" fill="#fff">★</text>
+      </svg>
+
+      <div style="font-size:3rem;">💕</div>
+
+      <!-- Dudu big -->
+      <svg width="120" height="150" viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="22" cy="18" rx="8" ry="22" fill="#ffe0f0"/>
+        <ellipse cx="58" cy="18" rx="8" ry="22" fill="#ffe0f0"/>
+        <ellipse cx="22" cy="14" rx="5" ry="17" fill="#ffb3ce"/>
+        <ellipse cx="58" cy="14" rx="5" ry="17" fill="#ffb3ce"/>
+        <circle cx="40" cy="46" r="26" fill="#fff5fa"/>
+        <ellipse cx="40" cy="50" rx="15" ry="12" fill="#ffe8f4"/>
+        <circle cx="33" cy="42" r="3.5" fill="#5a2d45"/>
+        <circle cx="47" cy="42" r="3.5" fill="#5a2d45"/>
+        <circle cx="34.5" cy="40.5" r="1.2" fill="#fff"/>
+        <circle cx="48.5" cy="40.5" r="1.2" fill="#fff"/>
+        <ellipse cx="33" cy="48" rx="4" ry="2.5" fill="#ff9dc8"/>
+        <ellipse cx="47" cy="48" rx="4" ry="2.5" fill="#ff9dc8"/>
+        <circle cx="40" cy="50" r="2.5" fill="#ff9dc8"/>
+        <path d="M36 53 Q40 57 44 53" stroke="#5a2d45" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="13" cy="80" rx="10" ry="14" fill="#fff5fa"/>
+        <ellipse cx="67" cy="80" rx="10" ry="14" fill="#fff5fa"/>
+        <ellipse cx="40" cy="82" rx="22" ry="16" fill="#fff5fa"/>
+        <ellipse cx="40" cy="88" rx="8" ry="5" fill="#ffe0f0"/>
+        <!-- bow on head -->
+        <path d="M30 22 Q28 17 33 20 Q40 16 47 20 Q52 17 50 22" fill="#ff6b9d"/>
+        <circle cx="40" cy="20" r="3" fill="#ff9dc8"/>
+      </svg>
     </div>
-    <!-- Screen 3: Birthday Messages -->
-    <div class="screen" id="screen3">
-        <div class="messages-screen">
-            <h2>🎊 Special Birthday Messages 🎊</h2>
-            <div class="message-box">
-                <h3>🌟 You're Amazing! 🌟</h3>
-                <p>Maan Ki Jaan, you light up every room you enter! Your smile is contagious, your laugh is the best sound in the world, and your friendship means everything to me.</p>
-            </div>
-            <!-- rest of the code remains the same, with changes in names and messages -->
-        </div>
+
+    <div class="hero-eyebrow">A very special surprise for</div>
+    <div class="hero-title">Happy Birthday</div>
+    <div class="hero-name">Maan Ki Jaan 🌸</div>
+    <div class="hero-date-badge">🎂 13th April 2026 🎂</div>
+    <div class="hero-from">with all my love — Maan 💕</div>
+
+    <div class="scroll-indicator">
+      <div class="scroll-arrow">↓</div>
+      <span>scroll down</span>
     </div>
-    <!-- Screen 4: Final Wishes -->
-    <div class="screen" id="screen4">
-        <div class="wishes-screen">
-            <h2>🎉 Happy Birthday Maan Ki Jaan! 🎉</h2>
-            <p style="color: white; font-size: 1.4em; margin-bottom: 25px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">✨ February 18, 2025 ✨</p>
-            <div class="wish-card">
-                <div class="celebration-emojis">🎂 🎈 🎁 🎊 ✨</div>
-                <p>Dear <span class="special-name">Maan Ki Jaan</span>,</p>
-                <p>On this special day, I want you to know how grateful I am to have you in my life. You're not just my love – you're my everything, and the person who makes every day better just by being in it.</p>
-                <p>Here's to another year of incredible adventures, romantic dates, and memories that we'll cherish forever!</p>
-                <div class="signature">Your Maan 💖</div>
-            </div>
-        </div>
+  </section>
+
+  <!-- MEMORY SECTION -->
+  <div class="memory-section">
+    <div class="section-wrap" style="padding:0; max-width:800px; text-align:center;">
+      <div class="section-tag reveal">Our Story</div>
+      <div class="section-title reveal" style="text-align:center; display:block; margin-bottom:2rem;">Do You Remember? 🥺</div>
+
+      <div class="memory-characters-row reveal">
+        <!-- walking together illustration -->
+        <svg width="220" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Bubu walking -->
+          <circle cx="60" cy="22" r="10" fill="#ff9dc8"/>
+          <circle cx="75" cy="22" r="10" fill="#ff9dc8"/>
+          <circle cx="68" cy="35" r="18" fill="#ffbcd9"/>
+          <ellipse cx="68" cy="40" rx="10" ry="8" fill="#ffcce6"/>
+          <circle cx="63" cy="32" r="2.5" fill="#5a2d45"/>
+          <circle cx="73" cy="32" r="2.5" fill="#5a2d45"/>
+          <ellipse cx="63" cy="37" rx="3" ry="2" fill="#ff7aac"/>
+          <ellipse cx="73" cy="37" rx="3" ry="2" fill="#ff7aac"/>
+          <path d="M65 41 Q68 44 71 41" stroke="#5a2d45" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <ellipse cx="52" cy="62" rx="8" ry="12" fill="#ff9dc8"/>
+          <ellipse cx="84" cy="62" rx="8" ry="12" fill="#ff9dc8"/>
+          <ellipse cx="68" cy="64" rx="18" ry="14" fill="#ffbcd9"/>
+          <!-- Legs walking -->
+          <ellipse cx="63" cy="78" rx="5" ry="8" fill="#ff9dc8" transform="rotate(10,63,78)"/>
+          <ellipse cx="73" cy="76" rx="5" ry="8" fill="#ff9dc8" transform="rotate(-10,73,76)"/>
+
+          <!-- Heart between them -->
+          <text x="101" y="50" font-size="20" fill="#ff6b9d">💕</text>
+
+          <!-- Dudu walking -->
+          <ellipse cx="148" cy="14" rx="6" ry="16" fill="#ffe0f0"/>
+          <ellipse cx="168" cy="14" rx="6" ry="16" fill="#ffe0f0"/>
+          <ellipse cx="148" cy="11" rx="4" ry="12" fill="#ffb3ce"/>
+          <ellipse cx="168" cy="11" rx="4" ry="12" fill="#ffb3ce"/>
+          <circle cx="158" cy="37" r="20" fill="#fff5fa"/>
+          <ellipse cx="158" cy="42" rx="11" ry="9" fill="#ffe8f4"/>
+          <circle cx="153" cy="33" r="2.5" fill="#5a2d45"/>
+          <circle cx="163" cy="33" r="2.5" fill="#5a2d45"/>
+          <ellipse cx="153" cy="39" rx="3" ry="2" fill="#ff9dc8"/>
+          <ellipse cx="163" cy="39" rx="3" ry="2" fill="#ff9dc8"/>
+          <path d="M155 43 Q158 47 161 43" stroke="#5a2d45" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <ellipse cx="142" cy="64" rx="8" ry="12" fill="#fff5fa"/>
+          <ellipse cx="174" cy="64" rx="8" ry="12" fill="#fff5fa"/>
+          <ellipse cx="158" cy="66" rx="18" ry="14" fill="#fff5fa"/>
+          <ellipse cx="153" cy="80" rx="5" ry="8" fill="#fff5fa" transform="rotate(-10,153,80)"/>
+          <ellipse cx="163" cy="78" rx="5" ry="8" fill="#fff5fa" transform="rotate(10,163,78)"/>
+        </svg>
+      </div>
+
+      <div class="memory-card reveal">
+        <p class="memory-text">
+          The day we first met felt like something straight out of a dream —
+          <span class="highlight">the moment my eyes found yours</span>, I knew everything was about to change.
+          There was something in the air, something warm and magical,
+          like the universe had quietly whispered:
+          <span class="highlight">"This is the one."</span>
+          <br><br>
+          I still remember every tiny detail — your smile, the sound of your laugh,
+          the way you made even an ordinary moment feel extraordinary.
+          That day became the most important day of my life.
+          <br><br>
+          And now, every single day I spend with you reminds me of how lucky I am —
+          because you, <span class="highlight">Maan Ki Jaan</span>, are the most precious person
+          this world has ever gifted me. 🌸
+        </p>
+        <span class="memory-signature">— Maan 💕</span>
+      </div>
     </div>
-    <!-- rest of the code remains the same -->
+  </div>
+
+  <div class="divider">🌸 💕 🌸 💕 🌸</div>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown-section">
+    <div class="countdown-inner">
+      <div class="reveal" style="text-align:center;">
+        <div class="section-tag">Counting Every Second</div>
+      </div>
+      <div class="section-title reveal" style="text-align:center; display:block;">Your Day is Coming! 🎂</div>
+      <div class="reveal" style="text-align:center;">
+        <!-- Mini Bubu Dudu excited -->
+        <svg width="120" height="70" viewBox="0 0 120 70" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:1rem;">
+          <!-- Bubu jumping -->
+          <circle cx="25" cy="12" r="7" fill="#ff9dc8"/>
+          <circle cx="37" cy="12" r="7" fill="#ff9dc8"/>
+          <circle cx="31" cy="24" r="14" fill="#ffbcd9"/>
+          <circle cx="28" cy="21" r="2" fill="#5a2d45"/><circle cx="34" cy="21" r="2" fill="#5a2d45"/>
+          <path d="M28 27 Q31 30 34 27" stroke="#5a2d45" stroke-width="1" fill="none" stroke-linecap="round"/>
+          <ellipse cx="31" cy="46" rx="12" ry="10" fill="#ffbcd9"/>
+          <text x="22" y="56" font-size="10" fill="#ff7aac">✿</text>
+          <!-- Stars -->
+          <text x="48" y="20" font-size="12" fill="#f5c842">✨</text>
+          <!-- Dudu jumping -->
+          <ellipse cx="80" cy="6" rx="5" ry="12" fill="#ffe0f0"/>
+          <ellipse cx="92" cy="6" rx="5" ry="12" fill="#ffe0f0"/>
+          <ellipse cx="80" cy="4" rx="3" ry="9" fill="#ffb3ce"/>
+          <ellipse cx="92" cy="4" rx="3" ry="9" fill="#ffb3ce"/>
+          <circle cx="86" cy="26" r="16" fill="#fff5fa"/>
+          <circle cx="83" cy="23" r="2" fill="#5a2d45"/><circle cx="89" cy="23" r="2" fill="#5a2d45"/>
+          <path d="M83 29 Q86 33 89 29" stroke="#5a2d45" stroke-width="1" fill="none" stroke-linecap="round"/>
+          <ellipse cx="86" cy="48" rx="12" ry="10" fill="#fff5fa"/>
+          <text x="78" y="55" font-size="10" fill="#ff9dc8">♡</text>
+          <text x="102" y="20" font-size="12" fill="#f5c842">🌟</text>
+        </svg>
+      </div>
+      <div class="countdown-row reveal" id="countdown-row">
+        <div class="cd-box"><span class="cd-num" id="cd-days">—</span><div class="cd-label">Days</div></div>
+        <div class="cd-box"><span class="cd-num" id="cd-hours">—</span><div class="cd-label">Hours</div></div>
+        <div class="cd-box"><span class="cd-num" id="cd-mins">—</span><div class="cd-label">Minutes</div></div>
+        <div class="cd-box"><span class="cd-num" id="cd-secs">—</span><div class="cd-label">Seconds</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider">🎀 💕 🎀 💕 🎀</div>
+
+  <!-- GIFTS -->
+  <div class="gifts-section">
+    <div class="section-wrap" style="padding:5rem 1.5rem; text-align:center;">
+      <div class="reveal" style="text-align:center;"><div class="section-tag">Choose Your Gift</div></div>
+      <div class="section-title reveal" style="text-align:center; display:block;">Pick One, Jaan! 🎁</div>
+
+      <div class="gifts-grid">
+
+        <!-- Gift 1: Stars -->
+        <div class="gift-card reveal" onclick="openGift('stars')">
+          <div class="gift-ribbon">Gift 1</div>
+          <div class="gift-svg-wrap">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Star gift -->
+              <circle cx="40" cy="40" r="35" fill="#fff8dc"/>
+              <text x="18" y="52" font-size="40">⭐</text>
+              <!-- Bubu peeking -->
+              <circle cx="15" cy="18" r="8" fill="#ffbcd9"/>
+              <circle cx="10" cy="13" r="5" fill="#ff9dc8"/>
+              <circle cx="20" cy="13" r="5" fill="#ff9dc8"/>
+              <circle cx="13" cy="17" r="1.5" fill="#5a2d45"/>
+              <circle cx="17" cy="17" r="1.5" fill="#5a2d45"/>
+              <path d="M13 21 Q15 23 17 21" stroke="#5a2d45" stroke-width="1" fill="none"/>
+            </svg>
+          </div>
+          <div class="gift-title">A Sky of Stars</div>
+          <div class="gift-desc">Every star in the galaxy is named after you. The whole universe is celebrating you tonight, my love. ✨</div>
+          <button class="gift-open-btn">Unwrap 🎀</button>
+        </div>
+
+        <!-- Gift 2: Memories -->
+        <div class="gift-card reveal" onclick="openGift('memories')" style="transition-delay:0.15s">
+          <div class="gift-ribbon">Gift 2</div>
+          <div class="gift-svg-wrap">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="35" fill="#ffe8f4"/>
+              <!-- Camera icon -->
+              <rect x="20" y="28" width="40" height="28" rx="6" fill="#ff9dc8"/>
+              <circle cx="40" cy="42" r="9" fill="#fff0f8"/>
+              <circle cx="40" cy="42" r="6" fill="#ff6b9d"/>
+              <circle cx="40" cy="42" r="3" fill="#fff"/>
+              <rect x="30" y="24" width="12" height="6" rx="3" fill="#ff9dc8"/>
+              <circle cx="55" cy="32" r="3" fill="#fff"/>
+              <!-- Dudu peeking -->
+              <ellipse cx="64" cy="18" rx="4" ry="9" fill="#ffe0f0"/>
+              <ellipse cx="70" cy="18" rx="4" ry="9" fill="#ffe0f0"/>
+              <ellipse cx="64" cy="16" rx="3" ry="7" fill="#ffb3ce"/>
+              <ellipse cx="70" cy="16" rx="3" ry="7" fill="#ffb3ce"/>
+              <circle cx="67" cy="25" r="8" fill="#fff5fa"/>
+              <circle cx="65" cy="24" r="1.5" fill="#5a2d45"/>
+              <circle cx="69" cy="24" r="1.5" fill="#5a2d45"/>
+            </svg>
+          </div>
+          <div class="gift-title">Our Memories</div>
+          <div class="gift-desc">Every laugh, every glance, every little moment — all captured in my heart, just for you. 📸</div>
+          <button class="gift-open-btn">Unwrap 🎀</button>
+        </div>
+
+        <!-- Gift 3: Forever -->
+        <div class="gift-card reveal" onclick="openGift('forever')" style="transition-delay:0.3s">
+          <div class="gift-ribbon">Gift 3</div>
+          <div class="gift-svg-wrap">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="35" fill="#fff0f8"/>
+              <!-- Heart gift -->
+              <path d="M40 60 C40 60 18 46 18 32 C18 24 25 20 32 24 C35.5 26 38 28 40 32 C42 28 44.5 26 48 24 C55 20 62 24 62 32 C62 46 40 60 40 60Z" fill="#ff6b9d"/>
+              <!-- Bubu & Dudu inside heart -->
+              <circle cx="35" cy="36" r="6" fill="#ffbcd9"/>
+              <circle cx="45" cy="36" r="6" fill="#fff5fa"/>
+              <circle cx="34" cy="35" r="1.2" fill="#5a2d45"/><circle cx="36" cy="35" r="1.2" fill="#5a2d45"/>
+              <circle cx="44" cy="35" r="1.2" fill="#5a2d45"/><circle cx="46" cy="35" r="1.2" fill="#5a2d45"/>
+              <path d="M34 38 Q35 40 36 38" stroke="#5a2d45" stroke-width="0.8" fill="none"/>
+              <path d="M44 38 Q45 40 46 38" stroke="#5a2d45" stroke-width="0.8" fill="none"/>
+            </svg>
+          </div>
+          <div class="gift-title">Forever & Always</div>
+          <div class="gift-desc">My heart, my time, my everything — completely and only yours. Today and forever. 💍</div>
+          <button class="gift-open-btn">Unwrap 🎀</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="divider">🌸 💕 🌸 💕 🌸</div>
+
+  <!-- LOVE LETTER -->
+  <div class="letter-section">
+    <div class="section-wrap" style="text-align:center;">
+      <div class="reveal"><div class="section-tag">From Maan's Heart</div></div>
+      <div class="section-title reveal" style="text-align:center; display:block;">My Love Letter to You 💌</div>
+
+      <!-- Bubu writing letter illustration -->
+      <div class="reveal" style="margin-bottom:2rem; display:flex; justify-content:center;">
+        <svg width="150" height="90" viewBox="0 0 150 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Table -->
+          <rect x="10" y="70" width="130" height="8" rx="4" fill="#ffcce6"/>
+          <rect x="20" y="78" width="8" height="12" rx="3" fill="#ffb3ce"/>
+          <rect x="122" y="78" width="8" height="12" rx="3" fill="#ffb3ce"/>
+          <!-- Letter on table -->
+          <rect x="45" y="45" width="60" height="28" rx="4" fill="#fff" stroke="#ff9dc8" stroke-width="1.5"/>
+          <line x1="52" y1="55" x2="98" y2="55" stroke="#ffb3ce" stroke-width="1.5"/>
+          <line x1="52" y1="61" x2="90" y2="61" stroke="#ffb3ce" stroke-width="1.5"/>
+          <line x1="52" y1="67" x2="85" y2="67" stroke="#ffb3ce" stroke-width="1.5"/>
+          <text x="50" y="53" font-size="8" fill="#ff6b9d">To: Maan ki jaan ♡</text>
+          <!-- Bubu sitting and writing -->
+          <circle cx="28" cy="32" r="8" fill="#ff9dc8"/>
+          <circle cx="18" cy="26" r="7" fill="#ff9dc8"/>
+          <circle cx="25" cy="44" r="16" fill="#ffbcd9"/>
+          <ellipse cx="25" cy="49" rx="9" ry="7" fill="#ffcce6"/>
+          <circle cx="22" cy="41" r="2.2" fill="#5a2d45"/>
+          <circle cx="28" cy="41" r="2.2" fill="#5a2d45"/>
+          <path d="M22 46 Q25 49 28 46" stroke="#5a2d45" stroke-width="1" fill="none" stroke-linecap="round"/>
+          <!-- Arm writing -->
+          <path d="M34 52 Q42 55 44 52" stroke="#ffbcd9" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <!-- Pen -->
+          <rect x="42" y="49" width="3" height="10" rx="1" fill="#ff6b9d" transform="rotate(-20,42,49)"/>
+          <!-- Hearts floating -->
+          <text x="35" y="25" font-size="10" fill="#ff6b9d">♡</text>
+          <text x="50" y="18" font-size="8" fill="#ffb3ce">♡</text>
+          <text x="100" y="35" font-size="8" fill="#f5c842">★</text>
+          <!-- Dudu watching -->
+          <ellipse cx="122" cy="28" rx="4" ry="10" fill="#ffe0f0"/>
+          <ellipse cx="130" cy="28" rx="4" ry="10" fill="#ffe0f0"/>
+          <ellipse cx="122" cy="26" rx="3" ry="8" fill="#ffb3ce"/>
+          <ellipse cx="130" cy="26" rx="3" ry="8" fill="#ffb3ce"/>
+          <circle cx="126" cy="38" r="12" fill="#fff5fa"/>
+          <circle cx="123" cy="36" r="2" fill="#5a2d45"/>
+          <circle cx="129" cy="36" r="2" fill="#5a2d45"/>
+          <circle cx="123" cy="34.5" r="0.8" fill="#fff"/>
+          <circle cx="129" cy="34.5" r="0.8" fill="#fff"/>
+          <path d="M123 41 Q126 44 129 41" stroke="#5a2d45" stroke-width="1" fill="none" stroke-linecap="round"/>
+          <ellipse cx="118" cy="58" rx="8" ry="10" fill="#fff5fa"/>
+          <ellipse cx="134" cy="58" rx="8" ry="10" fill="#fff5fa"/>
+          <ellipse cx="126" cy="60" rx="14" ry="10" fill="#fff5fa"/>
+        </svg>
+      </div>
+
+      <div class="letter-card reveal">
+        <p class="letter-text">
+          My dearest Maan Ki Jaan,<br><br>
+          On this very special day, I just want you to know —
+          from the bottom of my heart and the depths of my soul —
+          that you are the most beautiful thing that has ever happened to me.
+          <br><br>
+          Like Bubu &amp; Dudu, we are two little hearts that found each other in this big world,
+          and now I cannot imagine a single day without you in it.
+          You are my smile in the morning, my calm at night, and my favourite thought
+          in every moment in between.
+          <br><br>
+          Happy Birthday, my love. 🎂 You deserve the entire world,
+          and I promise to spend every day trying to give you exactly that.
+          <br><br>
+          I love you more than words could ever say. 💕
+        </p>
+        <span class="letter-sign">Forever yours — Maan 🌸</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div style="font-size:2rem; margin-bottom:0.5rem;">🌸 💕 🎂 💕 🌸</div>
+    Made with all my love for Maan Ki Jaan — 13 April 2026 &nbsp;|&nbsp; From: Maan 💕
+    <div style="font-size:0.8rem; margin-top:0.5rem; opacity:0.6;">Like Bubu &amp; Dudu — together always 🐾</div>
+  </footer>
+</div>
+
+<!-- ─── GIFT MODALS ─── -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-chars" id="modal-chars"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <p class="modal-text" id="modal-text"></p>
+    <button class="modal-close" onclick="closeGift()">Close with love 💕</button>
+  </div>
+</div>
+
+<script>
+// ──────────────────────────────
+//  PIN
+// ──────────────────────────────
+const PIN = '0809';
+let entered = '';
+
+function digit(d) {
+  if (entered.length >= 4) return;
+  entered += d;
+  document.getElementById('d' + (entered.length-1)).classList.add('filled');
+  if (entered.length === 4) {
+    setTimeout(() => {
+      if (entered === PIN) {
+        unlockSite();
+      } else {
+        showPinError();
+      }
+    }, 250);
+  }
+}
+
+function delDigit() {
+  if (!entered.length) return;
+  document.getElementById('d' + (entered.length-1)).classList.remove('filled');
+  entered = entered.slice(0,-1);
+}
+
+function showPinError() {
+  const err = document.getElementById('pin-error');
+  err.classList.add('show');
+  document.querySelectorAll('.pin-dot').forEach(d => {
+    d.style.background = '#ff4d6d';
+    d.style.boxShadow = '0 0 10px #ff4d6d';
+  });
+  setTimeout(() => {
+    err.classList.remove('show');
+    entered = '';
+    document.querySelectorAll('.pin-dot').forEach(d => {
+      d.classList.remove('filled');
+      d.style.background = '';
+      d.style.boxShadow = '';
+    });
+  }, 1300);
+}
+
+function unlockSite() {
+  const ps = document.getElementById('pin-screen');
+  ps.style.transition = 'opacity 1.2s ease, transform 1.2s ease';
+  ps.style.opacity = '0';
+  ps.style.transform = 'scale(1.08)';
+  setTimeout(() => {
+    ps.style.display = 'none';
+    document.getElementById('main-site').style.display = 'block';
+    initAll();
+  }, 1200);
+}
+
+// ──────────────────────────────
+//  INIT
+// ──────────────────────────────
+function initAll() {
+  buildConfetti();
+  startCountdown();
+  initReveal();
+}
+
+// ──────────────────────────────
+//  CONFETTI
+// ──────────────────────────────
+function buildConfetti() {
+  const wrap = document.getElementById('confetti-wrap');
+  const colors = ['#ff6b9d','#ffb3ce','#f5c842','#ff9dc8','#fff0f5','#a8e6cf'];
+  const shapes = ['circle','square'];
+  for (let i = 0; i < 35; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    const color = colors[Math.floor(Math.random()*colors.length)];
+    const isCircle = shapes[Math.floor(Math.random()*2)] === 'circle';
+    el.style.cssText = `
+      left:${Math.random()*100}vw;
+      background:${color};
+      border-radius:${isCircle ? '50%' : '2px'};
+      width:${6+Math.random()*8}px;
+      height:${6+Math.random()*8}px;
+      animation-duration:${6+Math.random()*10}s;
+      animation-delay:${Math.random()*8}s;
+    `;
+    wrap.appendChild(el);
+  }
+}
+
+// ──────────────────────────────
+//  COUNTDOWN
+// ──────────────────────────────
+function startCountdown() {
+  const target = new Date('2026-04-13T00:00:00');
+  function tick() {
+    const now = new Date();
+    const diff = target - now;
+    if (diff <= 0) {
+      document.getElementById('countdown-row').innerHTML =
+        `<div style="font-family:Pacifico,cursive;color:var(--rose);font-size:2rem;text-align:center;width:100%">🎉 Today is the Day! Happy Birthday! 🎂</div>`;
+      return;
+    }
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000) / 60000);
+    const secs  = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-days').textContent  = String(days).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cd-mins').textContent  = String(mins).padStart(2,'0');
+    document.getElementById('cd-secs').textContent  = String(secs).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+// ──────────────────────────────
+//  SCROLL REVEAL
+// ──────────────────────────────
+function initReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+// ──────────────────────────────
+//  GIFTS
+// ──────────────────────────────
+const giftData = {
+  stars: {
+    chars: `<svg width="55" height="60" viewBox="0 0 80 90" fill="none"><circle cx="20" cy="18" r="12" fill="#ff9dc8"/><circle cx="60" cy="18" r="12" fill="#ff9dc8"/><circle cx="40" cy="40" r="22" fill="#ffbcd9"/><circle cx="33" cy="36" r="3" fill="#5a2d45"/><circle cx="47" cy="36" r="3" fill="#5a2d45"/><path d="M36 47 Q40 51 44 47" stroke="#5a2d45" stroke-width="1.5" fill="none"/><text x="30" y="38" font-size="4" fill="#fff">⭐</text></svg>`,
+    title: '🌟 A Sky Full of Stars',
+    text: 'Every single star you see in the sky tonight has your name on it. The entire universe is celebrating YOU today, Maan Ki Jaan — because someone as wonderful as you deserves the whole galaxy looking down and smiling. ✨ You are brighter than any star, and I thank them every night for bringing you into my life. 💕'
+  },
+  memories: {
+    chars: `<svg width="55" height="60" viewBox="0 0 80 100" fill="none"><ellipse cx="22" cy="18" rx="8" ry="22" fill="#ffe0f0"/><ellipse cx="58" cy="18" rx="8" ry="22" fill="#ffe0f0"/><ellipse cx="22" cy="14" rx="5" ry="17" fill="#ffb3ce"/><ellipse cx="58" cy="14" rx="5" ry="17" fill="#ffb3ce"/><circle cx="40" cy="46" r="26" fill="#fff5fa"/><circle cx="33" cy="42" r="3" fill="#5a2d45"/><circle cx="47" cy="42" r="3" fill="#5a2d45"/><path d="M36 53 Q40 57 44 53" stroke="#5a2d45" stroke-width="1.5" fill="none"/></svg>`,
+    title: '📸 A Thousand Memories',
+    text: 'From the very first time our eyes met, to every ordinary Tuesday that felt like magic because you were there — I treasure every single moment with you. These memories are the most precious thing I own. Let\'s add a thousand more, my love. Every day with you is a memory worth keeping forever. 📸💕'
+  },
+  forever: {
+    chars: `<svg width="55" height="60" viewBox="0 0 80 90" fill="none"><circle cx="20" cy="18" r="12" fill="#ff9dc8"/><circle cx="60" cy="18" r="12" fill="#ff9dc8"/><circle cx="40" cy="40" r="22" fill="#ffbcd9"/><circle cx="33" cy="36" r="3" fill="#5a2d45"/><circle cx="47" cy="36" r="3" fill="#5a2d45"/><path d="M33 47 Q40 52 47 47" stroke="#5a2d45" stroke-width="1.5" fill="none"/><text x="34" y="38" font-size="8" fill="#ff6b9d">♡</text></svg>`,
+    title: '💍 Forever & Always',
+    text: 'This gift cannot be wrapped or put in a box — it\'s a promise. My heart is completely and forever yours. My time, my laughs, my silly moments, my serious ones — all of me, only for you. Today, tomorrow, and every single day that follows. You will never walk this world alone. I love you, Maan Ki Jaan — today, always, forever. ♾️💕'
+  }
+};
+
+function openGift(type) {
+  const g = giftData[type];
+  document.getElementById('modal-chars').innerHTML = g.chars + ' <span style="font-size:2rem">🎁</span> ' + g.chars;
+  document.getElementById('modal-title').textContent = g.title;
+  document.getElementById('modal-text').textContent  = g.text;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeGift() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeGift();
+}
+</script>
 </body>
-</html>
+                                                                                                                               </html>
