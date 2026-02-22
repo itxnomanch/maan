@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Maan Ki Jaan! 🎉</title>
+    <!-- rest of the code remains the same, with changes in names and messages -->
+</head>
+<body>
+    <!-- Screen 1: Mystery Door -->
+    <div class="screen active" id="screen1">
+        <div class="mystery-door">
+            <div class="door-icon">🚪</div>
+            <h1>A Special Surprise Awaits!</h1>
+            <p>Someone very special has a birthday today...</p>
+            <p>Are you ready to discover who? 🎈</p>
+            <button class="mystery-btn" onclick="revealBirthday()">Open the Door! 🎉</button>
+        </div>
+    </div>
+    <!-- Screen 2: Cake Cutting -->
+    <div class="screen" id="screen2">
+        <div class="cake-screen">
+            <h2>🎂 Happy Birthday Maan Ki Jaan! 🎂</h2>
+            <p style="color: white; font-size: 1.5em; margin-bottom: 20px;">📅 February 18 - Your Special Day! 📅</p>
+            <!-- rest of the code remains the same -->
+        </div>
+    </div>
+    <!-- Screen 3: Birthday Messages -->
+    <div class="screen" id="screen3">
+        <div class="messages-screen">
+            <h2>🎊 Special Birthday Messages 🎊</h2>
+            <div class="message-box">
+                <h3>🌟 You're Amazing! 🌟</h3>
+                <p>Maan Ki Jaan, you light up every room you enter! Your smile is contagious, your laugh is the best sound in the world, and your friendship means everything to me.</p>
+            </div>
+            <!-- rest of the code remains the same, with changes in names and messages -->
+        </div>
+    </div>
+    <!-- Screen 4: Final Wishes -->
+    <div class="screen" id="screen4">
+        <div class="wishes-screen">
+            <h2>🎉 Happy Birthday Maan Ki Jaan! 🎉</h2>
+            <p style="color: white; font-size: 1.4em; margin-bottom: 25px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">✨ February 18, 2025 ✨</p>
+            <div class="wish-card">
+                <div class="celebration-emojis">🎂 🎈 🎁 🎊 ✨</div>
+                <p>Dear <span class="special-name">Maan Ki Jaan</span>,</p>
+                <p>On this special day, I want you to know how grateful I am to have you in my life. You're not just my love – you're my everything, and the person who makes every day better just by being in it.</p>
+                <p>Here's to another year of incredible adventures, romantic dates, and memories that we'll cherish forever!</p>
+                <div class="signature">Your Maan 💖</div>
+            </div>
+        </div>
+    </div>
+    <!-- rest of the code remains the same -->
+</body>
+</html>
