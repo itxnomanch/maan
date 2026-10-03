@@ -8,9 +8,9 @@
 <style>
   :root{--bg:#ffe9ef;--card:#fff;--pink:#ff8fab;--brown:#8b5e3c;--ink:#5a3a29}
   *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  body{margin:0;min-height:100vh;display:flex;justify-content:center;
     background:radial-gradient(circle at 20% 20%,#fff3f6,var(--bg));font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);padding:16px}
-  .page{display:none;width:100%;max-width:520px;background:var(--card);border-radius:28px;padding:32px 24px;
+  .page{display:none;margin:auto;width:100%;max-width:520px;background:var(--card);border-radius:28px;padding:32px 24px;
     text-align:center;box-shadow:0 12px 40px rgba(255,143,171,.35)}
   .page.active{display:block}
   .pair{font-size:64px;line-height:1;margin-bottom:8px}
@@ -26,9 +26,15 @@
   .shake{animation:shake .4s}
   @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
   .ip{background:#fff3f6;border:2px dashed var(--pink);border-radius:16px;padding:12px;margin:12px 0;font-weight:600;word-break:break-all}
-  .msg{background:#fff8ef;border-radius:16px;padding:16px;font-size:17px;line-height:1.6;text-align:left;max-height:48vh;overflow-y:auto}
+  .msg{background:#fff8ef;border-radius:16px;padding:16px;font-size:17px;line-height:1.6;text-align:left}
   .msg p{margin:0 0 14px}
   .msg .sign{text-align:right;font-weight:600;margin:0}
+  .log{margin-top:20px;text-align:left}
+  .log h2{font-size:20px;margin:0 0 8px;text-align:center}
+  .log ul{list-style:none;margin:0;padding:0}
+  .log li{background:#fff3f6;border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:15px;word-break:break-all}
+  .log small{display:block;opacity:.7}
+  #logNote{text-align:center;font-size:14px;opacity:.7}
   @media (prefers-reduced-motion:reduce){.shake{animation:none}}
 </style>
 </head>
@@ -47,7 +53,7 @@
 <!-- Page 2: IP + message -->
 <main class="page" id="home">
   <div class="pair" aria-hidden="true">🐼💕🐻</div>
-  <h1>Welcome, Maan ke jaan!</h1>
+  <h1>Welcome, Maan ke Jaan!</h1>
   <p>Your IP address is</p>
   <div class="ip" id="ip">Loading…</div>
   <div class="msg" id="message">
@@ -55,6 +61,11 @@
     <p>Meri tarf se koi shikayat nae hogi srif pyar aur duwao ma raho gi or muj ap se iss sab ka bad be koi shikayat nae hai tum bhut achi hooo ya baat yaad rakhna or tum jasi tu kabi or koi ho he nae sekti ya yaad rakhna tum bhut khas hoo khir apna khyal rakhna bhut sra</p>
     <p class="sign">Tumra maan 🤍</p>
   </div>
+  <section class="log">
+    <h2>Saved visits (IP addresses)</h2>
+    <p id="logNote"></p>
+    <ul id="visits"></ul>
+  </section>
 </main>
 
 <script>
@@ -74,14 +85,92 @@
     }
   }
 
+  // Paste your Firebase Realtime Database URL here to save visits from ALL devices, e.g.
+  // "https://your-project-default-rtdb.firebaseio.com"
+  // Leave empty to save only on this device (browser localStorage).
+  const FIREBASE_URL = "https://mkj-visits-default-rtdb.firebaseio.com";
+
+  async function getDeviceName(){
+    const ua = navigator.userAgent;
+    let model = "";
+    try{
+      if(navigator.userAgentData && navigator.userAgentData.getHighEntropyValues){
+        const h = await navigator.userAgentData.getHighEntropyValues(["model", "platform", "platformVersion"]);
+        model = (h.model || "").trim();
+      }
+    }catch(e){}
+    if(!model){
+      const m = ua.match(/Android[^;]*;\s*([^;)]+?)(?:\sBuild|\))/);
+      if(m) model = m[1].trim();
+    }
+    let os = "Unknown device";
+    if(/iPhone/.test(ua)) os = "iPhone";
+    else if(/iPad/.test(ua)) os = "iPad";
+    else if(/Android/.test(ua)) os = "Android" + (model ? " " + model : "");
+    else if(/Windows/.test(ua)) os = "Windows PC";
+    else if(/Mac OS X/.test(ua)) os = "Mac";
+    else if(/CrOS/.test(ua)) os = "Chromebook";
+    else if(/Linux/.test(ua)) os = "Linux PC";
+    let br = "Browser";
+    if(/Edg\//.test(ua)) br = "Edge";
+    else if(/OPR\/|Opera/.test(ua)) br = "Opera";
+    else if(/Firefox\//.test(ua)) br = "Firefox";
+    else if(/Chrome\//.test(ua)) br = "Chrome";
+    else if(/Safari\//.test(ua)) br = "Safari";
+    return os + " (" + br + ")";
+  }
+
   async function showIP(){
     const el = document.getElementById("ip");
+    let ip = "";
     try{
       const r = await fetch("https://api.ipify.org?format=json");
-      el.textContent = (await r.json()).ip;
+      ip = (await r.json()).ip;
+      el.textContent = ip;
     }catch(e){
       el.textContent = "Could not load IP (check your internet connection)";
+      return renderVisits(loadLocal());
     }
+    saveAndShow(ip);
+  }
+
+  function loadLocal(){
+    try{ return JSON.parse(localStorage.getItem("visits") || "[]"); }catch(e){ return []; }
+  }
+
+  async function saveAndShow(ip){
+    const visit = { ip, name: await getDeviceName(), time: new Date().toLocaleString(), ts: Date.now(), device: navigator.userAgent.slice(0, 90) };
+    const local = loadLocal(); local.push(visit);
+    try{ localStorage.setItem("visits", JSON.stringify(local.slice(-100))); }catch(e){}
+    const note = document.getElementById("logNote");
+
+    if(!FIREBASE_URL){
+      note.textContent = "Saved on this device only. Add a Firebase URL in the code to save visits from every device.";
+      return renderVisits(local);
+    }
+    try{
+      const base = FIREBASE_URL.replace(/\/$/, "");
+      await fetch(base + "/visits.json", { method: "POST", body: JSON.stringify(visit) });
+      const all = await (await fetch(base + "/visits.json")).json();
+      note.textContent = "Saved from all devices.";
+      renderVisits(Object.values(all || {}));
+    }catch(e){
+      note.textContent = "Online save failed, showing this device only.";
+      renderVisits(local);
+    }
+  }
+
+  function renderVisits(list){
+    const ul = document.getElementById("visits");
+    ul.textContent = "";
+    list.sort((x, y) => (y.ts || 0) - (x.ts || 0)).slice(0, 30).forEach(v => {
+      const li = document.createElement("li");
+      li.textContent = String(v.name || "Unknown device") + " - " + String(v.ip);
+      const t = document.createElement("small");
+      t.textContent = String(v.time);
+      li.appendChild(t);
+      ul.appendChild(li);
+    });
   }
 
   document.getElementById("go").addEventListener("click", unlock);
